@@ -226,3 +226,80 @@ body {
   margin-top: 10px;
   font-size: clamp(22px, 6vw, 30px);
 }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #191818;
+  color: #ddd;
+  padding: 24px 16px;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 42px);
+  margin-bottom: 16px;
+  text-align: center;
+  color: #ffd700;
+}
+
+h2 {
+  margin-top: 32px;
+  margin-bottom: 8px;
+  font-size: clamp(20px, 4.5vw, 26px);
+  color: #7f72f3;
+}
+
+p {
+  margin-bottom: 10px;
+  opacity: 0.95;
+}
+
+ul {
+  margin-left: 18px;
+  margin-top: 6px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.box {
+  background: #222;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-top: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.highlight {
+  color: #0ff;
+  font-weight: 600;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 32px;
+  padding: 12px 26px;
+  border-radius: 12px;
+  background: #333;
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.back-btn:hover {
+  background: #555;
+  transform: scale(1.05);
+}
