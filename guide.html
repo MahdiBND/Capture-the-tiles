@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Play — Capture the Tiles</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main>
+
+    <h1>How to Play</h1>
+
+    <div class="box">
+      <h2>Objective</h2>
+      <p>
+        Capture tiles on the board and score more points than your opponent.
+        The game ends when <span class="highlight">all tiles are owned</span>.
+      </p>
+    </div>
+
+    <div class="box">
+      <h2>Starting Setup</h2>
+      <ul>
+        <li>Player 1 starts with the top-left and bottom-right corners.</li>
+        <li>Player 2 starts with the top-right and bottom-left corners.</li>
+        <li>Corner tiles begin with a base value of <span class="highlight">5</span>.</li>
+        <li>All other tiles start at <span class="highlight">0</span>.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Valid Moves</h2>
+      <p>
+        You may place a tile only if:
+      </p>
+      <ul>
+        <li>The tile is empty</li>
+        <li>It is adjacent (including diagonals) to <strong>any owned tile</strong></li>
+      </ul>
+      <p>
+        Valid moves for the human player are visually highlighted.
+      </p>
+    </div>
+
+    <div class="box">
+      <h2>Capturing Tiles</h2>
+      <p>
+        When you place a tile:
+      </p>
+      <ul>
+        <li>The tile becomes yours</li>
+        <li>Its base value increases by <span class="highlight">+1</span></li>
+        <li>
+          All adjacent tiles (8 directions):
+          <ul>
+            <li>Switch to your ownership</li>
+            <li>Each gain <span class="highlight">+1</span> base value</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Scoring</h2>
+      <p>
+        Your score is the <span class="highlight">sum of base values</span> of all tiles you own.
+      </p>
+      <p>
+        Scores update automatically after every move.
+      </p>
+    </div>
+
+    <div class="box">
+      <h2>Game End</h2>
+      <ul>
+        <li>The game ends when no empty tiles remain.</li>
+        <li>The player with the higher score wins.</li>
+        <li>If scores are equal, the game is a tie.</li>
+      </ul>
+    </div>
+
+    <a class="back-btn" href="index.html">Back to Game</a>
+
+  </main>
+</body>
+</html>
