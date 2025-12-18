@@ -236,25 +236,6 @@ body {
 </style>
 </head>
 <body>
-<div id="modeScreen">
-  <div class="mode-btn" onclick="startGame(false)">Multiplayer</div>
-  <div class="mode-btn" onclick="startGame(true)">Single Player (vs AI)</div>
-  <button class="mode-btn" onclick="location.href='adaptive.html'">
-Ultra Hard (Adaptive AI)
-</button>
-
-  <div id="aiDepthContainer" style="text-align:center;">
-    <label style="font-size:22px;">AI Depth:
-      <select id="aiDepthSelect" style="font-size:22px; padding:6px 10px;">
-        <option value="2">2 (Fast)</option>
-        <option value="3" selected>3 (Normal)</option>
-        <option value="4">4 (Strong)</option>
-        <option value="5">5 (Very Strong)</option>
-        <option value="6">6 (Hardcore)</option>
-      </select>
-    </label>
-  </div>
-</div>
 <div id="topHud">
   <div id="aiDepthLive"></div>
   <button id="restartBtn" onclick="restartGame()">Restart</button>
