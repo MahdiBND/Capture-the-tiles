@@ -56,6 +56,7 @@ function startGame(vsAI) {
   document.getElementById("scores").style.display = "block";
   document.getElementById("turn-container").style.display = "block";
   document.getElementById("restartBtn").style.display = "inline-block";
+  document.getElementById("playerThreat").style.display = "inline-block";
 
   initGame();
 }
@@ -194,16 +195,27 @@ function getValidMoves(state, player) {
 /* ----------------------------------------------------
 HUMAN ACTION
 ---------------------------------------------------- */
+
 function handleMove(r, c) {
   if (turn === AI_PLAYER && singlePlayer) return;
   if (!isSelectable(board[r][c])) return;
-  board = applyMove(board, r, c, turn);
-  turn = turn === 1 ? 2 : 1;
+
+  const prevState = board;               // snapshot
+  board = applyMove(board, r, c, turn);  // apply move
+
+  // ONLY track human impact
+  if (turn === HUMAN_PLAYER && singlePlayer) {
+    updatePlayerThreat(prevState, board);
+  }
+
+  turn = AI_PLAYER;
   renderBoard();
+
   if (!checkGameOver() && turn === AI_PLAYER && singlePlayer) {
     setTimeout(aiMove, 200);
   }
 }
+
 
 /* ----------------------------------------------------
 EVALUATION
@@ -248,20 +260,28 @@ function computeAdaptiveDepth(state, baseDepth) {
 
   let depth = baseDepth;
 
+  // Phase bias (soft)
   if (phase < 0.25) depth -= 2;
   else if (phase < 0.45) depth -= 1;
+  else depth += 1;
 
-  if (volatility > 15) depth += 1;
-  if (volatility > 30) depth += 2;
+  const normVol = volatility * (0.5 + phase);
+  if (normVol > 40) depth += 2;
+  else if (normVol > 20) depth += 1;
 
-  if (playerThreatLevel > 25) depth += 1;
+  depth += Math.floor(playerThreatLevel / 60);
 
-  return Math.max(2, Math.min(depth, baseDepth + 1));
+  const result = Math.max(2, Math.min(depth, baseDepth + 2));
+  document.getElementById("depth-indocator").textContent = `Current Depth: ${result}`;
+
+  return result;
 }
 
 function updatePlayerThreat(prev, next) {
   const delta = Math.abs(evaluateBoard(next) - evaluateBoard(prev));
-  playerThreatLevel = playerThreatLevel * 0.7 + delta * 0.3;
+  playerThreatLevel =
+    Math.max(0, playerThreatLevel * 0.6 + delta * 0.4);
+    document.getElementById("playerThreat").textContent = `${playerThreatLevel}`;
 }
 
 /* ----------------------------------------------------
@@ -321,8 +341,18 @@ async function aiMove() {
 
   const baseDepth = 3; // Ultra Hard baseline
   const depth = computeAdaptiveDepth(board, baseDepth);
-
   const move = await iterativeDeepening(board, depth);
+
+  const volatility = estimateVolatility(board, AI_PLAYER);
+  const aggression = computeAggression(
+    depth,
+    baseDepth,
+    playerThreatLevel,
+    volatility
+  );
+
+  document.getElementById("aiAggroLive").textContent =
+  `AI Aggression: ${aggression}`;
 
   let lastMove = null;
   if (move) {
@@ -350,6 +380,20 @@ async function aiMove() {
 
   checkGameOver();
 }
+
+/* ----------------------------------------------------
+Ai Aggression
+---------------------------------------------------- */
+function computeAggression(depth, baseDepth, threat, volatility) {
+  let score = 0;
+
+  score += (depth - baseDepth) * 20;          // depth escalation
+  score += Math.min(threat, 100) * 0.4;       // respect for player
+  score += Math.min(volatility, 50) * 0.6;    // tactical chaos
+
+  return Math.round(Math.min(100, score));
+}
+
 
 /* ----------------------------------------------------
 GAME OVER

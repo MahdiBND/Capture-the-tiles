@@ -112,6 +112,11 @@ body {
   opacity: 0.8;
 }
 
+#playerThreat {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
 /* ---------------- BOARD ---------------- */
 #scores {
   text-align: center;
