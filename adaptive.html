@@ -586,7 +586,7 @@ async function aiMove() {
   document.getElementById("aiThinking").classList.add("visible");
   await new Promise(requestAnimationFrame);
 
-  const baseDepth = 2; // Ultra Hard baseline
+  const baseDepth = 3; // Ultra Hard baseline
   const depth = computeAdaptiveDepth(board, baseDepth);
 
   const move = await iterativeDeepening(board, depth);
