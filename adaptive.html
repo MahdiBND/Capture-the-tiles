@@ -30,7 +30,7 @@ body {
   position: absolute;
   inset: 0;
   background: #191818;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -238,9 +238,9 @@ body {
 <body>
 <div id="topHud">
   <div id="aiDepthLive"></div>
-  <button id="restartBtn" onclick="restartGame()">Restart</button>
+  <button id="restartBtn" onclick="location.href='index.html'">Restart</button>
 </div>
-<div id="scores" style="display:none">
+<div id="scores">
   P1 Score: <span id="p1score">10</span> —
   P2 Score: <span id="p2score">10</span>
 </div>
@@ -251,7 +251,7 @@ body {
   </span>
 </div>
 <div id="board"></div>
-<div id="turn-container" style="display:none">
+<div id="turn-container">
   <div id="turn-display" class="player1-turn">Turn: Player 1</div>
 </div>
 <div id="overlay" onclick="restartGame()">
@@ -312,6 +312,47 @@ function hashState(state) {
 }
 
 /* ----------------------------------------------------
+INIT + MODE SELECT
+---------------------------------------------------- */
+function startGame(vsAI) {
+  singlePlayer = vsAI;
+  document.getElementById("scores").style.display = "block";
+  document.getElementById("turn-container").style.display = "block";
+  // document.getElementById("aiDepthContainer").style.display = vsAI ? "block" : "none";
+  document.getElementById("restartBtn").style.display = "inline-block";
+  // const depth = document.getElementById("aiDepthSelect").value;
+  // document.getElementById("aiDepthLive").textContent =
+  // singlePlayer ? `AI Depth: ${depth}` : "";
+
+  initGame();
+}
+
+function initGame() {
+  turn = 1;
+  initBoard();
+  initZobrist();
+  tt.clear();
+
+  document.getElementById("aiThinking").classList.remove("visible");
+  document.getElementById("overlay").style.display = "none";
+
+  renderBoard();
+}
+
+function restartGame() {
+  turn = 1;
+  initBoard();
+  initZobrist();
+  tt.clear();
+  document.getElementById("aiThinking").classList.remove("visible");
+  document.getElementById("overlay").style.display = "none";
+  document.getElementById("aiDepthContainer").style.display = "block";
+  document.getElementById("modeScreen").style.display = "flex";
+
+  renderBoard();
+}
+
+/* ----------------------------------------------------
 BOARD INIT
 ---------------------------------------------------- */
 function initBoard() {
@@ -327,6 +368,62 @@ function initBoard() {
   board[7][7].owner = 1;
   board[0][7].owner = 2;
   board[7][0].owner = 2;
+}
+
+function renderBoard(lastAIMove = null) {
+  const container = document.getElementById("board");
+  container.innerHTML = "";
+  const isHumanTurn = !singlePlayer || turn === HUMAN_PLAYER;
+  const gameNotOver = !board.flat().every(c => c.owner !== null);
+
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      const cellData = board[r][c];
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if (cellData.owner === 1) cell.classList.add("p1");
+      if (cellData.owner === 2) cell.classList.add("p2");
+
+      // Static highlight for valid moves (human turn)
+      if (isHumanTurn && gameNotOver && cellData.owner === null && isSelectable(cellData)) {
+        cell.classList.add("valid-move");
+      }
+
+      // Temporary animated highlight for AI's move
+      if (lastAIMove && lastAIMove[0] === r && lastAIMove[1] === c) {
+        cell.classList.add("ai-move-highlight");
+      }
+
+      if (cellData.base > 0) {
+        cell.innerHTML = `<span class="base">${cellData.base}</span>`;
+      }
+      cell.onclick = () => handleMove(r, c);
+      cell.ontouchstart = e => { e.preventDefault(); handleMove(r, c); };
+      container.appendChild(cell);
+    }
+  }
+  updateScores();
+}
+
+/* ----------------------------------------------------
+SCORES + TURNS
+---------------------------------------------------- */
+function updateScores() {
+  let p1 = 0, p2 = 0;
+  board.flat().forEach(c => {
+    if (c.owner === 1) p1 += c.base;
+    if (c.owner === 2) p2 += c.base;
+  });
+  document.getElementById("p1score").textContent = p1;
+  document.getElementById("p2score").textContent = p2;
+  updateTurnDisplay();
+}
+
+function updateTurnDisplay() {
+  const el = document.getElementById("turn-display");
+  el.textContent = `Turn: Player ${turn}`;
+  el.classList.remove("player1-turn", "player2-turn");
+  el.classList.add(turn === 1 ? "player1-turn" : "player2-turn");
 }
 
 /* ----------------------------------------------------
@@ -359,6 +456,20 @@ function applyMove(state, r, c, player) {
 
 function getValidMoves(state, player) {
   return state.flat().filter(c => isSelectable(c, state)).map(c => [c.row, c.col]);
+}
+
+/* ----------------------------------------------------
+HUMAN ACTION
+---------------------------------------------------- */
+function handleMove(r, c) {
+  if (turn === AI_PLAYER && singlePlayer) return;
+  if (!isSelectable(board[r][c])) return;
+  board = applyMove(board, r, c, turn);
+  turn = turn === 1 ? 2 : 1;
+  renderBoard();
+  if (!checkGameOver() && turn === AI_PLAYER && singlePlayer) {
+    setTimeout(aiMove, 200);
+  }
 }
 
 /* ----------------------------------------------------
@@ -472,19 +583,68 @@ async function iterativeDeepening(state, maxDepth) {
 AI MOVE
 ---------------------------------------------------- */
 async function aiMove() {
-  const baseDepth = 6; // Ultra Hard baseline
+  document.getElementById("aiThinking").classList.add("visible");
+  await new Promise(requestAnimationFrame);
+
+  const baseDepth = 2; // Ultra Hard baseline
   const depth = computeAdaptiveDepth(board, baseDepth);
 
   const move = await iterativeDeepening(board, depth);
-  if (move) board = applyMove(board, move[0], move[1], AI_PLAYER);
+
+  let lastMove = null;
+  if (move) {
+    board = applyMove(board, move[0], move[1], AI_PLAYER);
+    lastMove = move; // remember AI's move
+  }
+
   turn = HUMAN_PLAYER;
+
+  document.getElementById("aiThinking").classList.remove("visible");
+
+  // Render with AI move highlight
+  renderBoard(lastMove);
+
+  // Remove highlight after 1 second
+  if (lastMove) {
+    setTimeout(() => {
+      const cells = document.querySelectorAll('.cell');
+      const index = lastMove[0] * SIZE + lastMove[1];
+      if (cells[index]) {
+        cells[index].classList.remove('ai-move-highlight');
+      }
+    }, 1000);
+  }
+
+  checkGameOver();
+}
+
+/* ----------------------------------------------------
+GAME OVER
+---------------------------------------------------- */
+function checkGameOver() {
+  if (board.flat().every(c => c.owner !== null)) {
+    showGameOver();
+    return true;
+  }
+  return false;
+}
+
+function showGameOver() {
+  document.getElementById("gameover").style.display = "block";
+  const p1 = +document.getElementById("p1score").textContent;
+  const p2 = +document.getElementById("p2score").textContent;
+  const txt = p1 > p2 ? "Winner: Player 1" :
+  p2 > p1 ? "Winner: Player 2" :
+  "It's a tie!";
+  document.getElementById("winner").textContent = txt;
+  document.getElementById("overlay").style.display = "flex";
+
 }
 
 /* ----------------------------------------------------
 START
 ---------------------------------------------------- */
-initZobrist();
-initBoard();
+startGame(true);
 </script>
 </body>
 </html>
