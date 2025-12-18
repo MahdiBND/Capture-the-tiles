@@ -1,333 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Capture the Tiles</title>
-<style>
-:root {
---cell-size: 11vw;
---gap: 2px;
---max-cell-size: 60px;
---min-cell-size: 38px;
---p1-color: #7f72f3;
---p2-color: #048886;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body {
-height: 100%;
-background: #191818;
-color: #ddd;
-font-family: 'Segoe UI', sans-serif;
-touch-action: manipulation;
-}
-body {
-display: flex;
-flex-direction: column;
-padding: 20px 10px;
-}
-/* ---------------- MODE SCREEN ---------------- */
-#modeScreen {
-position: absolute;
-inset: 0;
-background: #191818;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 30px;
-z-index: 20;
-}
-.mode-btn {
-padding: 18px 30px;
-font-size: 28px;
-border-radius: 14px;
-background: #333;
-color: white;
-cursor: pointer;
-box-shadow: 0 0 20px rgba(255,255,255,0.1);
-transition: 0.2s;
-}
-.mode-btn:hover {
-background: #555;
-transform: scale(1.05);
-}
-#aiDepthContainer {
-margin-top: 10px;
-}
-/* ---------------- AI THINKING ANIMATION ---------------- */
-#aiThinking {
-height: 34px;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.2s;
-text-align: center;
-font-size: 26px;
-margin-top: 10px;
-color: #0ff;
-}
-#aiThinking.visible {
-opacity: 1;
-animation: pulseText 1.2s infinite;
-}
-@keyframes pulseText {
-0% { opacity: 0.2; }
-50% { opacity: 1; }
-100% { opacity: 0.2; }
-}
-.loader-dots span {
-display: inline-block;
-width: 10px;
-height: 10px;
-margin-left: 5px;
-background: #0ff;
-border-radius: 50%;
-animation: dotBlink 1s infinite ease-in-out;
-}
-.loader-dots span:nth-child(2){ animation-delay:0.2s; }
-.loader-dots span:nth-child(3){ animation-delay:0.4s; }
-@keyframes dotBlink {
-0%, 80%, 100% { opacity: 0.2; }
-40% { opacity: 1; }
-}
-/* ---------------- RESTART BUTTON ---------------- */
-#topHud {
-display: flex;
-justify-content: space-between;
-align-items: center;
-max-width: 95vw;
-margin: 0 auto 10px;
-gap: 12px;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capture the Tiles</title>
+  <style>
+  :root {
+    --cell-size: 11vw;
+    --gap: 2px;
+    --max-cell-size: 60px;
+    --min-cell-size: 38px;
+    --p1-color: #7f72f3;
+    --p2-color: #048886;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: #191818;
+    color: #ddd;
+    font-family: 'Segoe UI', sans-serif;
+    touch-action: manipulation;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+  }
+  /* ---------------- MODE SCREEN ---------------- */
+  #modeScreen {
+    position: absolute;
+    inset: 0;
+    background: #191818;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    z-index: 20;
+  }
+  .mode-btn {
+    padding: 18px 30px;
+    font-size: 28px;
+    border-radius: 14px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    transition: 0.2s;
+  }
+  .mode-btn:hover {
+    background: #555;
+    transform: scale(1.05);
+  }
+  #aiDepthContainer {
+    margin-top: 10px;
+  }
+  /* ---------------- AI THINKING ANIMATION ---------------- */
+  #aiThinking {
+    height: 34px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    text-align: center;
+    font-size: 26px;
+    margin-top: 10px;
+    color: #0ff;
+  }
+  #aiThinking.visible {
+    opacity: 1;
+    animation: pulseText 1.2s infinite;
+  }
+  @keyframes pulseText {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { opacity: 0.2; }
+  }
+  .loader-dots span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    background: #0ff;
+    border-radius: 50%;
+    animation: dotBlink 1s infinite ease-in-out;
+  }
+  .loader-dots span:nth-child(2){ animation-delay:0.2s; }
+  .loader-dots span:nth-child(3){ animation-delay:0.4s; }
+  @keyframes dotBlink {
+    0%, 80%, 100% { opacity: 0.2; }
+    40% { opacity: 1; }
+  }
+  /* ---------------- RESTART BUTTON ---------------- */
+  #topHud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 95vw;
+    margin: 0 auto 10px;
+    gap: 12px;
+  }
 
-#restartBtn {
-padding: 8px 18px;
-font-size: 16px;
-border-radius: 10px;
-background: #333;
-color: white;
-cursor: pointer;
-border: none;
-}
+  #restartBtn {
+    padding: 8px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    border: none;
+  }
 
-#restartBtn:hover {
-background: #555;
-}
+  #restartBtn:hover {
+    background: #555;
+  }
 
-#aiDepthLive {
-font-size: 14px;
-opacity: 0.8;
-}
+  #aiDepthLive {
+    font-size: 14px;
+    opacity: 0.8;
+  }
 
-/* ---------------- BOARD ---------------- */
-#scores {
-text-align: center;
-font-size: clamp(18px, 5vw, 26px);
-margin-bottom: 15px;
-}
-#p1score { color: var(--p1-color); font-weight: bold; }
-#p2score { color: var(--p2-color); font-weight: bold; }
-#board {
-display: grid;
-grid-template-columns: repeat(8, minmax(0, 1fr));
-grid-auto-rows: 1fr;
-gap: 0.6vw;
-max-width: 95vw;
-max-height: 95vw;
-margin: auto;
-aspect-ratio: 1/1;
-}
-.cell {
-width: var(--cell-size);
-height: var(--cell-size);
-min-width: var(--min-cell-size);
-min-height: var(--min-cell-size);
-max-width: var(--max-cell-size);
-max-height: var(--max-cell-size);
-background: #3f3e3e;
-border-radius: 14px;
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: bold;
-font-size: clamp(14px, 3.5vw, 20px);
-user-select: none;
-cursor: pointer;
-transition: transform 0.2s, box-shadow 0.4s;
-position: relative;
-}
-.cell:active { transform: scale(0.92); }
-.p1 { background: var(--p1-color); color: white; }
-.p2 { background: var(--p2-color); color: white; }
-.base { font-size: 1.15em; text-shadow: 0 1px 4px #000; }
+  /* ---------------- BOARD ---------------- */
+  #scores {
+    text-align: center;
+    font-size: clamp(18px, 5vw, 26px);
+    margin-bottom: 15px;
+  }
+  #p1score { color: var(--p1-color); font-weight: bold; }
+  #p2score { color: var(--p2-color); font-weight: bold; }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 0.6vw;
+    max-width: 95vw;
+    max-height: 95vw;
+    margin: auto;
+    aspect-ratio: 1/1;
+  }
+  .cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    min-width: var(--min-cell-size);
+    min-height: var(--min-cell-size);
+    max-width: var(--max-cell-size);
+    max-height: var(--max-cell-size);
+    background: #3f3e3e;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: clamp(14px, 3.5vw, 20px);
+    user-select: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.4s;
+    position: relative;
+  }
+  .cell:active { transform: scale(0.92); }
+  .p1 { background: var(--p1-color); color: white; }
+  .p2 { background: var(--p2-color); color: white; }
+  .base { font-size: 1.15em; text-shadow: 0 1px 4px #000; }
 
-/* Static subtle highlight for valid human moves */
-.cell.valid-move {
+  /* Static subtle highlight for valid human moves */
+  .cell.valid-move {
     box-shadow: 0 0 0 1.5px rgba(127, 114, 243, 0.6);
     cursor: pointer;
-}
+  }
 
-/* Animated pulse for AI's chosen move */
-.cell.ai-move-highlight {
+  /* Animated pulse for AI's chosen move */
+  .cell.ai-move-highlight {
     animation: pulseHighlight 1.5s ease-out;
     z-index: 10;
-}
+  }
 
-@keyframes pulseHighlight {
+  @keyframes pulseHighlight {
     0% {
-        box-shadow: 0 0 0 0 rgba(4, 136, 134, 0.7);
+      box-shadow: 0 0 0 0 rgba(4, 136, 134, 0.7);
     }
     50% {
-        box-shadow: 0 0 0 12px rgba(4, 136, 134, 0.4),
-                    0 0 30px rgba(4, 136, 134, 0.8);
+      box-shadow: 0 0 0 12px rgba(4, 136, 134, 0.4),
+      0 0 30px rgba(4, 136, 134, 0.8);
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(4, 136, 134, 0);
+      box-shadow: 0 0 0 0 rgba(4, 136, 134, 0);
     }
-}
+  }
 
-/* ---------------- TURN DISPLAY ---------------- */
-#turn-container { margin-top: 30px; text-align: center; }
-#turn-display {
-display: inline-block;
-padding: 14px 36px;
-border-radius: 50px;
-font-size: clamp(20px, 6vw, 30px);
-color: white;
-background: #555;
-box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-transition: all 0.4s ease;
-}
-.player1-turn {
-background: linear-gradient(135deg, var(--p1-color), #5a4fcf) !important;
-box-shadow: 0 0 30px rgba(127,114,243,0.8) !important;
-}
-.player2-turn {
-background: linear-gradient(135deg, var(--p2-color), #035f5d) !important;
-box-shadow: 0 0 30px rgba(4,136,134,0.8) !important;
-}
-#overlay {
-position: fixed;
-inset: 0;
-display: none;
-align-items: center;
-justify-content: center;
-background: rgba(0,0,0,0.55);
-z-index: 100;
-}
+  /* ---------------- TURN DISPLAY ---------------- */
+  #turn-container { margin-top: 30px; text-align: center; }
+  #turn-display {
+    display: inline-block;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: clamp(20px, 6vw, 30px);
+    color: white;
+    background: #555;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    transition: all 0.4s ease;
+  }
+  .player1-turn {
+    background: linear-gradient(135deg, var(--p1-color), #5a4fcf) !important;
+    box-shadow: 0 0 30px rgba(127,114,243,0.8) !important;
+  }
+  .player2-turn {
+    background: linear-gradient(135deg, var(--p2-color), #035f5d) !important;
+    box-shadow: 0 0 30px rgba(4,136,134,0.8) !important;
+  }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    z-index: 100;
+  }
 
-#overlayBox {
-text-align: center;
-padding: 30px 40px;
-border-radius: 18px;
-background: #222;
-box-shadow: 0 0 30px rgba(0,0,0,0.8);
-}
+  #overlayBox {
+    text-align: center;
+    padding: 30px 40px;
+    border-radius: 18px;
+    background: #222;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+  }
 
-#overlayBox h2 {
-font-size: clamp(28px, 8vw, 42px);
-color: #ffd700;
-}
+  #overlayBox h2 {
+    font-size: clamp(28px, 8vw, 42px);
+    color: #ffd700;
+  }
 
-#overlayBox h3 {
-margin-top: 10px;
-font-size: clamp(22px, 6vw, 30px);
-}
+  #overlayBox h3 {
+    margin-top: 10px;
+    font-size: clamp(22px, 6vw, 30px);
+  }
 
 </style>
 </head>
 <body>
-<div id="modeScreen">
+  <div id="modeScreen">
     <div class="mode-btn" onclick="startGame(false)">Multiplayer</div>
     <div class="mode-btn" onclick="startGame(true)">Single Player (vs AI)</div>
     <div id="aiDepthContainer" style="text-align:center;">
-        <label style="font-size:22px;">AI Depth:
-            <select id="aiDepthSelect" style="font-size:22px; padding:6px 10px;">
-                <option value="2">2 (Fast)</option>
-                <option value="3" selected>3 (Normal)</option>
-                <option value="4">4 (Strong)</option>
-                <option value="5">5 (Very Strong)</option>
-                <option value="6">6 (Hardcore)</option>
-            </select>
-        </label>
+      <label style="font-size:22px;">AI Depth:
+        <select id="aiDepthSelect" style="font-size:22px; padding:6px 10px;">
+          <option value="2">2 (Fast)</option>
+          <option value="3" selected>3 (Normal)</option>
+          <option value="4">4 (Strong)</option>
+          <option value="5">5 (Very Strong)</option>
+          <option value="6">6 (Hardcore)</option>
+        </select>
+      </label>
     </div>
-</div>
-<div id="topHud">
-  <div id="aiDepthLive"></div>
-  <button id="restartBtn" onclick="restartGame()">Restart</button>
-</div>
-<div id="scores" style="display:none">
+  </div>
+  <div id="topHud">
+    <div id="aiDepthLive"></div>
+    <button id="restartBtn" onclick="restartGame()">Restart</button>
+  </div>
+  <div id="scores" style="display:none">
     P1 Score: <span id="p1score">10</span> —
     P2 Score: <span id="p2score">10</span>
-</div>
-<div id="aiThinking">
+  </div>
+  <div id="aiThinking">
     Thinking
     <span class="loader-dots">
-        <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
     </span>
-</div>
-<div id="board"></div>
-<div id="turn-container" style="display:none">
-    <div id="turn-display" class="player1-turn">Turn: Player 1</div>
-</div>
-<div id="overlay" onclick="restartGame()">
-  <div id="overlayBox" onclick="event.stopPropagation()">
-    <h2 id="gameover">Game Over</h2>
-    <h3 id="winner"></h3>
   </div>
-</div>
+  <div id="board"></div>
+  <div id="turn-container" style="display:none">
+    <div id="turn-display" class="player1-turn">Turn: Player 1</div>
+  </div>
+  <div id="overlay" onclick="restartGame()">
+    <div id="overlayBox" onclick="event.stopPropagation()">
+      <h2 id="gameover">Game Over</h2>
+      <h3 id="winner"></h3>
+    </div>
+  </div>
 
 
-<script>
-/* ----------------------------------------------------
+  <script>
+  /* ----------------------------------------------------
   GAME STATE
----------------------------------------------------- */
-const SIZE = 8;
-let turn = 1;
-let board = [];
-let singlePlayer = false;
-const AI_PLAYER = 2;
-const HUMAN_PLAYER = 1;
-/* Directions */
-const dirs = [
+  ---------------------------------------------------- */
+  const SIZE = 8;
+  let turn = 1;
+  let board = [];
+  let singlePlayer = false;
+  const AI_PLAYER = 2;
+  const HUMAN_PLAYER = 1;
+  /* Directions */
+  const dirs = [
     [-1,-1],[-1,0],[-1,1],
     [0,-1], [0,1],
     [1,-1],[1,0],[1,1]
-];
+  ];
 
-/* Zobrist hashing for transposition */
-let zobrist = [];
-let tt = new Map();
+  /* Zobrist hashing for transposition */
+  let zobrist = [];
+  let tt = new Map();
 
-function initZobrist() {
+  function initZobrist() {
     zobrist = [];
     for (let r = 0; r < SIZE; r++) {
-        zobrist[r] = [];
-        for (let c = 0; c < SIZE; c++) {
-            zobrist[r][c] = [
-                Math.random()*2**32,
-                Math.random()*2**32,
-                Math.random()*2**32
-            ];
-        }
+      zobrist[r] = [];
+      for (let c = 0; c < SIZE; c++) {
+        zobrist[r][c] = [
+          Math.random()*2**32,
+          Math.random()*2**32,
+          Math.random()*2**32
+        ];
+      }
     }
-}
+  }
 
-function hashState(state) {
+  function hashState(state) {
     let h = 0;
     for (let r=0; r<SIZE; r++){
-        for(let c=0; c<SIZE; c++){
-            const o = state[r][c].owner ?? 0;
-            h ^= zobrist[r][c][o];
-        }
+      for(let c=0; c<SIZE; c++){
+        const o = state[r][c].owner ?? 0;
+        h ^= zobrist[r][c][o];
+      }
     }
     return h;
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   INIT + MODE SELECT
----------------------------------------------------- */
-function startGame(vsAI) {
+  ---------------------------------------------------- */
+  function startGame(vsAI) {
     singlePlayer = vsAI;
     document.getElementById("modeScreen").style.display = "none";
     document.getElementById("scores").style.display = "block";
@@ -339,9 +339,9 @@ function startGame(vsAI) {
     singlePlayer ? `AI Depth: ${depth}` : "";
 
     initGame();
-}
+  }
 
-function initGame() {
+  function initGame() {
     turn = 1;
     initBoard();
     initZobrist();
@@ -351,9 +351,9 @@ function initGame() {
     document.getElementById("overlay").style.display = "none";
 
     renderBoard();
-}
+  }
 
-function restartGame() {
+  function restartGame() {
     turn = 1;
     initBoard();
     initZobrist();
@@ -364,233 +364,233 @@ function restartGame() {
     document.getElementById("modeScreen").style.display = "flex";
 
     renderBoard();
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   BOARD LOGIC
----------------------------------------------------- */
-function initBoard() {
+  ---------------------------------------------------- */
+  function initBoard() {
     board = [];
     for (let r = 0; r < SIZE; r++) {
-        board[r] = [];
-        for (let c = 0; c < SIZE; c++) {
-            const isCorner = (r===0&&c===0)||(r===0&&c===7)||(r===7&&c===0)||(r===7&&c===7);
-            board[r][c] = { row:r, col:c, owner:null, base:isCorner ? 5 : 0 };
-        }
+      board[r] = [];
+      for (let c = 0; c < SIZE; c++) {
+        const isCorner = (r===0&&c===0)||(r===0&&c===7)||(r===7&&c===0)||(r===7&&c===7);
+        board[r][c] = { row:r, col:c, owner:null, base:isCorner ? 5 : 0 };
+      }
     }
     board[0][0].owner = 1;
     board[7][7].owner = 1;
     board[0][7].owner = 2;
     board[7][0].owner = 2;
-}
+  }
 
-function renderBoard(lastAIMove = null) {
+  function renderBoard(lastAIMove = null) {
     const container = document.getElementById("board");
     container.innerHTML = "";
     const isHumanTurn = !singlePlayer || turn === HUMAN_PLAYER;
     const gameNotOver = !board.flat().every(c => c.owner !== null);
 
     for (let r = 0; r < SIZE; r++) {
-        for (let c = 0; c < SIZE; c++) {
-            const cellData = board[r][c];
-            const cell = document.createElement("div");
-            cell.className = "cell";
-            if (cellData.owner === 1) cell.classList.add("p1");
-            if (cellData.owner === 2) cell.classList.add("p2");
+      for (let c = 0; c < SIZE; c++) {
+        const cellData = board[r][c];
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        if (cellData.owner === 1) cell.classList.add("p1");
+        if (cellData.owner === 2) cell.classList.add("p2");
 
-            // Static highlight for valid moves (human turn)
-            if (isHumanTurn && gameNotOver && cellData.owner === null && isSelectable(cellData)) {
-                cell.classList.add("valid-move");
-            }
-
-            // Temporary animated highlight for AI's move
-            if (lastAIMove && lastAIMove[0] === r && lastAIMove[1] === c) {
-                cell.classList.add("ai-move-highlight");
-            }
-
-            if (cellData.base > 0) {
-                cell.innerHTML = `<span class="base">${cellData.base}</span>`;
-            }
-            cell.onclick = () => handleMove(r, c);
-            cell.ontouchstart = e => { e.preventDefault(); handleMove(r, c); };
-            container.appendChild(cell);
+        // Static highlight for valid moves (human turn)
+        if (isHumanTurn && gameNotOver && cellData.owner === null && isSelectable(cellData)) {
+          cell.classList.add("valid-move");
         }
+
+        // Temporary animated highlight for AI's move
+        if (lastAIMove && lastAIMove[0] === r && lastAIMove[1] === c) {
+          cell.classList.add("ai-move-highlight");
+        }
+
+        if (cellData.base > 0) {
+          cell.innerHTML = `<span class="base">${cellData.base}</span>`;
+        }
+        cell.onclick = () => handleMove(r, c);
+        cell.ontouchstart = e => { e.preventDefault(); handleMove(r, c); };
+        container.appendChild(cell);
+      }
     }
     updateScores();
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   SCORES + TURNS
----------------------------------------------------- */
-function updateScores() {
+  ---------------------------------------------------- */
+  function updateScores() {
     let p1 = 0, p2 = 0;
     board.flat().forEach(c => {
-        if (c.owner === 1) p1 += c.base;
-        if (c.owner === 2) p2 += c.base;
+      if (c.owner === 1) p1 += c.base;
+      if (c.owner === 2) p2 += c.base;
     });
     document.getElementById("p1score").textContent = p1;
     document.getElementById("p2score").textContent = p2;
     updateTurnDisplay();
-}
+  }
 
-function updateTurnDisplay() {
+  function updateTurnDisplay() {
     const el = document.getElementById("turn-display");
     el.textContent = `Turn: Player ${turn}`;
     el.classList.remove("player1-turn", "player2-turn");
     el.classList.add(turn === 1 ? "player1-turn" : "player2-turn");
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   MOVE LOGIC
----------------------------------------------------- */
-function isSelectable(cell, state = board) {
+  ---------------------------------------------------- */
+  function isSelectable(cell, state = board) {
     if (cell.owner !== null) return false;
     for (const [dr,dc] of dirs) {
-        const nr = cell.row + dr, nc = cell.col + dc;
-        if (nr>=0 && nr<SIZE && nc>=0 && nc<SIZE && state[nr][nc].owner !== null) return true;
+      const nr = cell.row + dr, nc = cell.col + dc;
+      if (nr>=0 && nr<SIZE && nc>=0 && nc<SIZE && state[nr][nc].owner !== null) return true;
     }
     return false;
-}
+  }
 
-function applyMove(state, r, c, player) {
+  function applyMove(state, r, c, player) {
     const newState = JSON.parse(JSON.stringify(state));
     const cell = newState[r][c];
     cell.owner = player;
     cell.base += 1;
     for (const [dr,dc] of dirs) {
-        const nr = r + dr, nc = c + dc;
-        if (nr>=0 && nr<SIZE && nc>=0 && nc<SIZE && newState[nr][nc].owner !== null) {
-            newState[nr][nc].owner = player;
-            newState[nr][nc].base += 1;
-        }
+      const nr = r + dr, nc = c + dc;
+      if (nr>=0 && nr<SIZE && nc>=0 && nc<SIZE && newState[nr][nc].owner !== null) {
+        newState[nr][nc].owner = player;
+        newState[nr][nc].base += 1;
+      }
     }
     return newState;
-}
+  }
 
-function getValidMoves(state, player) {
+  function getValidMoves(state, player) {
     let moves = [];
     state.flat().forEach(cell => {
-        if (isSelectable(cell, state)) {
-            moves.push([cell.row, cell.col]);
-        }
+      if (isSelectable(cell, state)) {
+        moves.push([cell.row, cell.col]);
+      }
     });
     return moves;
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   HUMAN ACTION
----------------------------------------------------- */
-function handleMove(r, c) {
+  ---------------------------------------------------- */
+  function handleMove(r, c) {
     if (turn === AI_PLAYER && singlePlayer) return;
     if (!isSelectable(board[r][c])) return;
     board = applyMove(board, r, c, turn);
     turn = turn === 1 ? 2 : 1;
     renderBoard();
     if (!checkGameOver() && turn === AI_PLAYER && singlePlayer) {
-        setTimeout(aiMove, 200);
+      setTimeout(aiMove, 200);
     }
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   AI: EVALUATION
----------------------------------------------------- */
-function evaluateBoard(state) {
+  ---------------------------------------------------- */
+  function evaluateBoard(state) {
     let p1 = 0, p2 = 0;
     const corners = [[0,0],[0,7],[7,0],[7,7]];
     let cornerP1 = 0, cornerP2 = 0;
     for (let c of state.flat()) {
-        if (c.owner === 1) p1 += c.base;
-        if (c.owner === 2) p2 += c.base;
+      if (c.owner === 1) p1 += c.base;
+      if (c.owner === 2) p2 += c.base;
     }
     for (let [r,c] of corners) {
-        if (state[r][c].owner === 1) cornerP1++;
-        if (state[r][c].owner === 2) cornerP2++;
+      if (state[r][c].owner === 1) cornerP1++;
+      if (state[r][c].owner === 2) cornerP2++;
     }
     const mobilityP1 = getValidMoves(state, 1).length;
     const mobilityP2 = getValidMoves(state, 2).length;
     return (
-        (p2 - p1) * 2 +
-        (cornerP2 - cornerP1) * 20 +
-        (mobilityP2 - mobilityP1) * 3
+      (p2 - p1) * 2 +
+      (cornerP2 - cornerP1) * 20 +
+      (mobilityP2 - mobilityP1) * 3
     );
-}
+  }
 
-function orderMoves(state, moves, player) {
+  function orderMoves(state, moves, player) {
     return moves.sort((a,b)=>{
-        const sA = evaluateBoard(applyMove(state, a[0], a[1], player));
-        const sB = evaluateBoard(applyMove(state, b[0], b[1], player));
-        return player===AI_PLAYER ? sB-sA : sA-sB;
+      const sA = evaluateBoard(applyMove(state, a[0], a[1], player));
+      const sB = evaluateBoard(applyMove(state, b[0], b[1], player));
+      return player===AI_PLAYER ? sB-sA : sA-sB;
     });
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   AI: MINIMAX + TT + ITERATIVE DEEPENING
----------------------------------------------------- */
-function minimax(state, depth, alpha, beta, maximizing) {
+  ---------------------------------------------------- */
+  function minimax(state, depth, alpha, beta, maximizing) {
     const hash = hashState(state);
     if (tt.has(hash)) {
-        const entry = tt.get(hash);
-        if (entry.depth >= depth) return [entry.score, entry.move];
+      const entry = tt.get(hash);
+      if (entry.depth >= depth) return [entry.score, entry.move];
     }
     const player = maximizing ? AI_PLAYER : HUMAN_PLAYER;
     let moves = getValidMoves(state, player);
     if (depth === 0 || moves.length === 0) {
-        return [evaluateBoard(state), null];
+      return [evaluateBoard(state), null];
     }
     moves = orderMoves(state, moves, player);
     let bestMove = moves[0];
     if (maximizing) {
-        let best = -Infinity;
-        for (const [r,c] of moves) {
-            const result = minimax(applyMove(state,r,c,AI_PLAYER), depth-1, alpha, beta, false);
-            if (result[0] > best) {
-                best = result[0];
-                bestMove = [r,c];
-            }
-            alpha = Math.max(alpha, best);
-            if (alpha >= beta) break;
+      let best = -Infinity;
+      for (const [r,c] of moves) {
+        const result = minimax(applyMove(state,r,c,AI_PLAYER), depth-1, alpha, beta, false);
+        if (result[0] > best) {
+          best = result[0];
+          bestMove = [r,c];
         }
-        tt.set(hash, {score:best, move:bestMove, depth});
-        return [best, bestMove];
+        alpha = Math.max(alpha, best);
+        if (alpha >= beta) break;
+      }
+      tt.set(hash, {score:best, move:bestMove, depth});
+      return [best, bestMove];
     } else {
-        let best = +Infinity;
-        for (const [r,c] of moves) {
-            const result = minimax(applyMove(state,r,c,HUMAN_PLAYER), depth-1, alpha, beta, true);
-            if (result[0] < best) {
-                best = result[0];
-                bestMove = [r,c];
-            }
-            beta = Math.min(beta, best);
-            if (alpha >= beta) break;
+      let best = +Infinity;
+      for (const [r,c] of moves) {
+        const result = minimax(applyMove(state,r,c,HUMAN_PLAYER), depth-1, alpha, beta, true);
+        if (result[0] < best) {
+          best = result[0];
+          bestMove = [r,c];
         }
-        tt.set(hash, {score:best, move:bestMove, depth});
-        return [best, bestMove];
+        beta = Math.min(beta, best);
+        if (alpha >= beta) break;
+      }
+      tt.set(hash, {score:best, move:bestMove, depth});
+      return [best, bestMove];
     }
-}
+  }
 
-async function iterativeDeepening(state, maxDepth) {
+  async function iterativeDeepening(state, maxDepth) {
     let best = null;
     for (let d=1; d<=maxDepth; d++) {
-        best = minimax(state, d, -Infinity, Infinity, true)[1];
-        await new Promise(r => setTimeout(r));
+      best = minimax(state, d, -Infinity, Infinity, true)[1];
+      await new Promise(r => setTimeout(r));
     }
     return best;
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   AI MOVE
----------------------------------------------------- */
-async function aiMove() {
+  ---------------------------------------------------- */
+  async function aiMove() {
     document.getElementById("aiThinking").classList.add("visible");
     await new Promise(requestAnimationFrame);
-    
+
     const depth = parseInt(document.getElementById("aiDepthSelect").value);
     const move = await iterativeDeepening(board, depth);
 
     let lastMove = null;
     if (move) {
-        board = applyMove(board, move[0], move[1], AI_PLAYER);
-        lastMove = move; // remember AI's move
+      board = applyMove(board, move[0], move[1], AI_PLAYER);
+      lastMove = move; // remember AI's move
     }
 
     turn = HUMAN_PLAYER;
@@ -602,40 +602,40 @@ async function aiMove() {
 
     // Remove highlight after 1 second
     if (lastMove) {
-        setTimeout(() => {
-            const cells = document.querySelectorAll('.cell');
-            const index = lastMove[0] * SIZE + lastMove[1];
-            if (cells[index]) {
-                cells[index].classList.remove('ai-move-highlight');
-            }
-        }, 1000);
+      setTimeout(() => {
+        const cells = document.querySelectorAll('.cell');
+        const index = lastMove[0] * SIZE + lastMove[1];
+        if (cells[index]) {
+          cells[index].classList.remove('ai-move-highlight');
+        }
+      }, 1000);
     }
 
     checkGameOver();
-}
+  }
 
-/* ----------------------------------------------------
+  /* ----------------------------------------------------
   GAME OVER
----------------------------------------------------- */
-function checkGameOver() {
+  ---------------------------------------------------- */
+  function checkGameOver() {
     if (board.flat().every(c => c.owner !== null)) {
-        showGameOver();
-        return true;
+      showGameOver();
+      return true;
     }
     return false;
-}
+  }
 
-function showGameOver() {
+  function showGameOver() {
     document.getElementById("gameover").style.display = "block";
     const p1 = +document.getElementById("p1score").textContent;
     const p2 = +document.getElementById("p2score").textContent;
     const txt = p1 > p2 ? "Winner: Player 1" :
-                p2 > p1 ? "Winner: Player 2" :
-                "It's a tie!";
+    p2 > p1 ? "Winner: Player 2" :
+    "It's a tie!";
     document.getElementById("winner").textContent = txt;
     document.getElementById("overlay").style.display = "flex";
 
-}
-</script>
-</body>
-</html>
+  }
+  </script>
+  </body>
+  </html>
